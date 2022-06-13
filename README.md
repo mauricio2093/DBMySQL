@@ -1,2 +1,2 @@
 # DBMySQL
-Data base with MySQL
+Data base with SQL MySQL
