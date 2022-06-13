@@ -18,3 +18,185 @@ Es buena práctica no eliminar registros de una bases de datos es por ello que s
 Es buena práctica tener una columna que permite saber el momento exacto en el que se crea un registro o se actualiza. Este tipo de dato se comporta más como una meta-información y nos puede ayudar por ejemplo a cuántos usuarios fueron creados en una fecha en específico, saber cuando una tupla se actualizó
 
 created_ad Es una columna de buena práctica que permite saber cuando se creó un registro. Está utilizará un conjunto de propiedades llamada entre ella se colocará DEFAULT CURRENT_TIMESTAMP . Cuando se realiza un insert sí el valor de esta columna viene vacío colocará en la tupla el valor de la fecha en que se creó de manera automática .
+
+----------------------------------------------
+Dos tipos de joins que podemos usar cuando estemos trabajando con consultas a nuestras bases de datos.
+
+Existen diferentes formas en las que se pueden unir las tablas en nuestras consultas y de acuerdo con 
+esta unión se va a mostrar información, y es importante siempre tener clara esta relación. 
+En esta clase te voy a mostrar gráficamente 7 diferentes tipos de uniones que puedes realizar.
+
+Usar correctamente estas uniones puede reducir el tiempo de ejecución de tus consultas y mejorar el 
+rendimiento de tus aplicaciones.
+
+Como yo lo veo cuando hacemos uniones en las consultas para seleccionar información, estamos 
+trabajando con tablas, estas tablas podemos verlas como conjuntos de información, de forma que 
+podemos asimilar los joins entre tablas como uniones e intersecciones entre conjuntos.
+
+Supongamos que contamos con dos conjuntos, el conjunto A y el conjunto B, o, la tabla A y la tabla B. 
+Sobre estos conjuntos veamos cuál es el resultado si aplicamos diferentes tipos de join.
+
+------------ 1. Inner Join
+Esta es la forma mas fácil de seleccionar información de diferentes tablas, es tal vez la que mas usas
+a diario en tu trabajo con bases de datos. Esta union retorna todas las filas de la tabla A que 
+oinciden en la tabla B. Es decir aquellas que están en la tabla A Y en la tabla B, si lo vemos en 
+conjuntos la intersección entre la tabla A y la B.
+Esto lo podemos implementar de esta forma cuando estemos escribiendo las consultas:
+
+SELECT <columna_1> , <columna_2>,  <columna_3> ... <columna_n> 
+FROM Tabla_A A
+INNER JOIN Tabla_B B
+    ON A.pk = B.pk
+
+---------------------------2. Left Join
+Esta consulta retorna todas las filas que están en la tabla A y ademas si hay coincidencias de 
+filas en la tabla B también va a traer esas filas.
+
+BadgesMesa de trabajo 2 copia.jpg
+Esto lo podemos implementar de esta forma cuando estemos escribiendo las consultas:
+
+SELECT <columna_1> , <columna_2>,  <columna_3> ... <columna_n> 
+FROM Tabla_A A
+LEFT JOIN Tabla_B B
+    ON A.pk = B.pk
+
+----------------------------3. Right Join
+Esta consulta retorna todas las filas de la tabla B y ademas si hay filas en la tabla A que coinciden también va a traer estas filas de la tabla A.
+
+BadgesMesa de trabajo 2 copia 2.jpg
+Esto lo podemos implementar de esta forma cuando estemos escribiendo las consultas:
+
+SELECT <columna_1> , <columna_2>,  <columna_3> ... <columna_n>
+FROM Tabla_A A
+RIGHT JOIN Tabla_B B
+    ON A.pk = B.pk
+
+--------------------------4. Outer Join
+
+Este join retorna TODAS las filas de las dos tablas. 
+Hace la union entre las filas que coinciden entre la tabla A y la tabla B.
+
+BadgesMesa de trabajo 2 copia 3.jpg
+Esto lo podemos implementar de esta forma cuando estemos escribiendo las consultas:
+
+SELECT <columna_1> , <columna_2>,  <columna_3> ... <columna_n>
+FROM Tabla_A A
+FULL OUTER JOIN Tabla_B B
+    ON A.pk = B.pk
+
+--------------------- 5. Left excluding join
+Esta consulta retorna todas las filas de la tabla de la izquierda, es decir la tabla A que no tienen ninguna coincidencia con la tabla de la derecha, es decir la tabla B.
+
+BadgesMesa de trabajo 2 copia 4.jpg
+Esto lo podemos implementar de esta forma cuando estemos escribiendo las consultas:
+
+SELECT <columna_1> , <columna_2>,  <columna_3> ... <columna_n>
+FROM Tabla_A A
+LEFT JOIN Tabla_B B
+    ON A.pk = B.pk
+WHERE B.pk IS NULL
+-------------------- 6. Right Excluding join
+Esta consulta retorna todas las filas de la tabla de la derecha, es decir la tabla B que no tienen coincidencias en la tabla de la izquierda, es decir la tabla A.
+
+BadgesMesa de trabajo 2 copia 5.jpg
+Esto lo podemos implementar de esta forma cuando estemos escribiendo las consultas:
+
+SELECT <columna_1> , <columna_2>,  <columna_3> ... <columna_n>
+FROM Tabla_A A
+RIGHT JOIN Tabla_B B
+    ON A.pk = B.pk
+WHERE A.pk IS NULL
+
+---------------------- 7. Outer excluding join
+Esta consulta retorna todas las filas de la tabla de la izquierda, tabla A, y todas las filas de la tabla de la derecha, tabla B que no coinciden.
+
+BadgesMesa de trabajo 2 copia 6.jpg
+Esto lo podemos implementar de esta forma cuando estemos escribiendo las consultas:
+
+SELECT <select_list>
+FROM Table_A A
+FULL OUTER JOIN Table_B B
+    ON A.Key = B.Key
+WHERE A.Key IS NULL OR B.Key IS NULL
+
+------------------- 
+Tips:
+
+Los datos no deberían borrarse, siempre y cuando se respete el acuerdo con el usuario final.
+SIEMPRE usar WHERE con comandos UPDATE.
+Al hacer UPDATE o DELETE usar LIMIT para limitar el impacto del comando si algo saliese mal.
+Comandos:
+
+DELETE: elimina información.
+UPDATE: actualiza información en una tabla.
+TRUNCATE: elimina el contenido de una tabla por completo.
+Código:
+
+-- Clase 19 UPDATE Y DELETE
+
+-- Ejemplos de Delete y Update
+
+DELETE FROM authors WHERE author_id = 161 LIMIT 1;
+
+SELECT client_id, name FROM clients WHERE active <> 1;
+
+UPDATE clients SET active = 0 WHERE client_id = 80 LIMIT 1;
+
+UPDATE clients
+SET 
+    email = 'javier@gmail.com'
+WHERE
+    client_id = 7
+LIMIT 1;
+
+--Desactivar clientes con ID especifica y apellido lopez
+
+UPDATE clients
+SET 
+    active = 0
+WHERE
+    client_id IN (1,6,8,27)
+    OR name like '%Lopez%';
+
+-- Buscar con ID y Lopez
+
+SELECT client_id, name
+FROM clients
+WHERE
+    client_id IN (1,6,8,27)
+    OR name like '%Lopez%';```
+
+SHOW databases; - muestra las bases de datos existentes.
+USE database_name; - selecciona una base de datos específica.
+SHOW tables; - muestras las tablas de la base de datos.
+SELECT database(); - me muestra el nombre de la base de datos seleccionada.
+CREATE database database_name; - crea una nueva base de datos.
+CREATE DATABASE IF NOT EXISTS database_name; - crea una base de datos si no existe.
+SHOW warnings; - muestra las advertencias.
+DROP table table_name; - Elimina permanentemente una tabla.
+DESCRIBE table_name; - Nos indica las columnas que tenemos en una tabla.
+SHOW FULL COLUMNS FROM table_name; - es parecido al comando DESCRIBE pero muestra mas datos.
+INSERT INTO table_name(columns) VALUES(values); - inserta una tupla.
+ON DUPLICATE KEY IGNORE ALL - esta sentencia ignora las resticciones al insertar una tupla
+con un valor repetido y que esta restringido en una columna con UNIQUE (Nota: nunca utilizarlo).
+ON DUPLICATE KEY UPDATE column = VALUES(value) - al insertar una tupla con un campo duplicado
+actualiza un el valor de un campo específico con un nuevo valor tomado de los datos insertados.
+SELECT * FROM table_name WHERE column_value = 1\G - en lugar de cerrar la sentencia con ;
+se utiliza \G, lo cual muestra los datos de una manera mas legible.
+mysql -u root -p < all_schema.sql - con este comando podemos ejecutar un script SQL inmediatamente
+despues de acceder a la base de datos.
+mysql -u root -p -D database_name < all_schema.sql - este comando es parecido al anterior solo
+que con la bandera -D indicamos el nombre de la base de datos sobre la que queremos ejecutar el script.
+SELECT YEAR(NOW()); - esta sentencia me muestra el año de la fecha actual utilizando las funciones YEAR() y NOW().
+SELECT * FROM table_name WHERE column_value like ‘%value%’; - esta sentencia nos muestra las tuplas que en un
+campo específico contengan un valor, el wildcard % indica que no nos importa que valor existan antes o despues del
+dato que especificamos.
+SELECT COUNT(*) FROM table_name; - devuelve el número de tuplas de una tabla.
+SELECT * FROM table_name WHERE column_value BETWEEN value AND value; - nos devuelve las tuplas que se encuentren
+en medio de los valores indicados.
+DELETE FROM table_name WHERE column_value = value; - elimina una tupla de una tabla.
+UPDATE table_name SET [column_value = value, …] WHERE column_value = value; - actualiza una tupla de una tabla.
+TRUNCATE table_name; - borra todo el contenido de una tabla.
+mysqldump -u user -p database_name > esquema.sql - guarda el esquema de una base de datos con todo y datos en un
+archivo sql.
+mysqldump -u user -p -d database_name es parecido al comando anterior solo que aquí no se guardan los datos.

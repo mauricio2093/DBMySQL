@@ -29,11 +29,6 @@ CREATE TABLE db_operation.books(
 `description` TEXT
 );                      -- crear tabla
 
--- Tipos de columna
-SELECT * FROM authors;
-DESCRIBE authors;                       -- ver los tipos de datos
-DESC books;
-SHOW FULL COLUMNS FROM books;
 
 -- crear tabla clientes
 CREATE TABLE clientes(
@@ -47,6 +42,10 @@ CREATE TABLE clientes(
     `updated_at`    TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP 
         ON UPDATE CURRENT_TIMESTAMP
 );
+
+ALTER TABLE clients
+ADD `updated_at`    TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP 
+        ON UPDATE CURRENT_TIMESTAMP;
 
 CREATE TABLE operations(
     operation_id INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
